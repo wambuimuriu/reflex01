@@ -1,49 +1,12 @@
 import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
+import '@fontsource/space-grotesk/500.css'
+import '@fontsource/space-grotesk/600.css'
+import '@fontsource/space-grotesk/700.css'
+import '@fontsource/ibm-plex-sans/400.css'
+import '@fontsource/ibm-plex-sans/500.css'
 import './globals.css'
 
-export const metadata: Metadata = {
-  title: 'v0 App',
-  description: 'Created with v0',
-  generator: 'v0.app',
-  icons: {
-    icon: [
-      {
-        url: '/icon-light-32x32.png',
-        media: '(prefers-color-scheme: light)',
-      },
-      {
-        url: '/icon-dark-32x32.png',
-        media: '(prefers-color-scheme: dark)',
-      },
-      {
-        url: '/icon.svg',
-        type: 'image/svg+xml',
-      },
-    ],
-    apple: '/apple-icon.png',
-  },
-}
-
-export const viewport: Viewport = {
-  colorScheme: 'light dark',
-  themeColor: [
-    { media: '(prefers-color-scheme: light)', color: 'white' },
-    { media: '(prefers-color-scheme: dark)', color: 'black' },
-  ],
-}
-
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode
-}>) {
-  return (
-    <html lang="en">
-      <body className="antialiased">
-        {children}
-        {process.env.NODE_ENV === 'production' && <Analytics />}
-      </body>
-    </html>
-  )
-}
+export const metadata: Metadata = { title: 'Waypoint — Delivery operations', description: 'Coordinate every delivery from pickup to proof.', generator: 'v0.app' }
+export const viewport: Viewport = { width: 'device-width', initialScale: 1, colorScheme: 'light', themeColor: '#f4f6f5' }
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) { return <html lang="en" className="bg-background"><body className="antialiased">{children}{process.env.NODE_ENV === 'production' && <Analytics />}</body></html> }
