@@ -1,10 +1,11 @@
 import { NextResponse } from 'next/server'
+import { cookies } from 'next/headers'
 import db from '@/lib/db'
 import { getDevRole, userForRole } from '@/lib/session'
 import { validateTransition, nextStatus } from '@/lib/status'
 
-function list(role: string) { const rows = db.prepare(`SELECT d.*, u.name as rider_name FROM deliveries d LEFT JOIN users u ON u.id = d.rider_id ${role === 'retailer' ? "WHERE d.retailer = 'Northstar Market'" : role === 'rider' ? "WHERE d.rider_id = 'u-rider'" : ''} ORDER BY d.created_at DESC`).all(); return rows }
-export async function GET() { return NextResponse.json({ role: await getDevRole(), deliveries: list(await getDevRole()) }) }
+function list(role: string, userId?: string) { const rows = db.prepare(`SELECT d.*, u.name as rider_name FROM deliveries d LEFT JOIN users u ON u.id = d.rider_id ${role === 'retailer' ? 'WHERE d.retailer = (SELECT name FROM users WHERE id = ?)' : role === 'rider' ? 'WHERE d.rider_id = ?' : ''} ORDER BY d.created_at DESC`).all(...(role === 'retailer' || role === 'rider' ? [userId ?? userForRole(role as any)] : [])); return rows }
+export async function GET() { const role = await getDevRole(); const userId = (await cookies()).get('session-user')?.value; return NextResponse.json({ role, deliveries: list(role, userId) }) }
 export async function POST(request: Request) {
   const role = await getDevRole(); if (role !== 'retailer') return NextResponse.json({ error: 'Only retailer staff can create deliveries.' }, { status: 403 })
   const body = await request.json(); if (!body.address || !body.reference) return NextResponse.json({ error: 'Reference and address are required.' }, { status: 400 })
