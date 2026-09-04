@@ -19,16 +19,16 @@ const users = [
   ['u-rider-2', 'Faith Wambui', 'rider', 'FW', 'rider2@reflex.dev'],
 ] as const
 const upsert = db.prepare('INSERT OR REPLACE INTO users (id, name, role, initials, password_hash) VALUES (?, ?, ?, ?, ?)')
-for (const [id, name, role, initials] of users) upsert.run(id, name, role, initials, `${users.length}:${hash()}`)
+for (const [id, name, role, initials, email] of users) upsert.run(id, name, role, initials, `${email}:${hash()}`)
 const count = (db.prepare('SELECT count(*) as count FROM deliveries').get() as { count: number }).count
 if (!count) {
-  const insert = db.prepare('INSERT INTO deliveries VALUES (?, ?, ?, ?, ?, ?, ?, ?)')
+  const insert = db.prepare('INSERT INTO deliveries (id, reference, retailer, address, status, rider_id, eta, created_at, confirmation_code, confirmation_status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)')
   const now = new Date().toISOString()
-  insert.run('del-jane-wanjiku', 'REF-1001', 'Wanjiku Mwangi', 'Kutus, Kirinyaga', 'Pending', null, 'Today, 3:00 PM', now)
-  insert.run('del-ret-1-2', 'REF-1002', 'Wanjiku Mwangi', 'Nairobi CBD', 'Pending', null, 'Today, 4:00 PM', now)
-  insert.run('del-ret-1-3', 'REF-1003', 'Wanjiku Mwangi', 'Embu Town', 'Assigned', 'u-rider-1', 'Today, 2:00 PM', now)
-  insert.run('del-ret-1-4', 'REF-1004', 'Wanjiku Mwangi', 'Nyeri Road', 'Picked Up', 'u-rider-1', 'Today, 1:00 PM', now)
-  insert.run('del-ret-2-1', 'REF-2001', 'Muranga Pharmacy Desk', 'Murang’a Town', 'Delivered', 'u-rider-2', 'Yesterday', now)
+  insert.run('del-jane-wanjiku', 'REF-1001', 'Wanjiku Mwangi', 'Kutus, Kirinyaga', 'Pending', 'u-rider-1', 'Today, 3:00 PM', now, 'REF-1001', 'pending')
+  insert.run('del-ret-1-2', 'REF-1002', 'Wanjiku Mwangi', 'Nairobi CBD', 'Pending', null, 'Today, 4:00 PM', now, 'REF-1002', 'pending')
+  insert.run('del-ret-1-3', 'REF-1003', 'Wanjiku Mwangi', 'Embu Town', 'Assigned', 'u-rider-1', 'Today, 2:00 PM', now, 'REF-1003', 'pending')
+  insert.run('del-ret-1-4', 'REF-1004', 'Wanjiku Mwangi', 'Nyeri Road', 'Picked Up', 'u-rider-1', 'Today, 1:00 PM', now, 'REF-1004', 'pending')
+  insert.run('del-ret-2-1', 'REF-2001', 'Muranga Pharmacy Desk', 'Murang’a Town', 'Delivered', 'u-rider-2', 'Yesterday', now, 'REF-2001', 'pending')
 }
 db.close()
 console.log('Seeded development users and deliveries. Password: Demo1234!')
