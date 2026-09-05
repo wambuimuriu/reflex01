@@ -1,5 +1,3 @@
-import { sqliteTable, text, integer } from 'drizzle-orm/sqlite-core'
-
-export const users = sqliteTable('users', { id: text('id').primaryKey(), name: text('name').notNull(), role: text('role').notNull(), initials: text('initials').notNull(), passwordHash: text('password_hash') })
-export const deliveries = sqliteTable('deliveries', { id: text('id').primaryKey(), reference: text('reference').notNull(), retailer: text('retailer').notNull(), retailerId: text('retailer_id'), address: text('address').notNull(), status: text('status').notNull(), riderId: text('rider_id'), eta: text('eta').notNull(), createdAt: text('created_at').notNull(), confirmationCode: text('confirmation_code'), confirmationStatus: text('confirmation_status'), confirmedAt: text('confirmed_at') })
-export const statusHistory = sqliteTable('status_history', { id: integer('id').primaryKey({ autoIncrement: true }), deliveryId: text('delivery_id').notNull(), fromStatus: text('from_status'), toStatus: text('to_status').notNull(), actorId: text('actor_id').notNull(), createdAt: text('created_at').notNull() })
+export type UserRow = { id: string; name: string; role: string; initials: string; password_hash: string | null }
+export type DeliveryRow = { id: string; reference: string; retailer: string; retailer_id: string | null; address: string; status: string; rider_id: string | null; eta: string; created_at: Date; confirmation_code: string | null; confirmation_status: string; confirmed_at: Date | null }
+export type StatusHistoryRow = { id: number; delivery_id: string; from_status: string | null; to_status: string; actor_id: string; created_at: Date }

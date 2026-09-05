@@ -1,11 +1,11 @@
 import { NextResponse } from 'next/server'
 import { cookies } from 'next/headers'
-import db from '@/lib/db'
+import { query } from '@/lib/db'
 
 export async function GET() {
   const id = (await cookies()).get('session-user')?.value
-  const user = id ? db.prepare('SELECT id, name, role, initials FROM users WHERE id = ?').get(id) : null
-  return NextResponse.json({ user: user ?? null })
+  const result = id ? await query('SELECT id, name, role, initials FROM users WHERE id = $1', [id]) : null
+  return NextResponse.json({ user: result?.rows[0] ?? null })
 }
 
 export async function DELETE() {

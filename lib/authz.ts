@@ -1,5 +1,5 @@
-import db from '@/lib/db'
 import { cookies } from 'next/headers'
+import { query } from './db'
 import { isRole, type Role } from './status'
 
 export type SessionUser = { id: string; name: string; role: Role; initials: string }
@@ -7,7 +7,8 @@ export type SessionUser = { id: string; name: string; role: Role; initials: stri
 export async function getSessionUser(): Promise<SessionUser | null> {
   const id = (await cookies()).get('session-user')?.value
   if (!id) return null
-  const user = db.prepare('SELECT id, name, role, initials FROM users WHERE id = ?').get(id) as { id: string; name: string; role: string; initials: string } | undefined
+  const { rows } = await query<{ id: string; name: string; role: string; initials: string }>('SELECT id, name, role, initials FROM users WHERE id = $1', [id])
+  const user = rows[0]
   return user && isRole(user.role) ? { ...user, role: user.role } : null
 }
 
@@ -21,6 +22,8 @@ export function requireRole(user: SessionUser | null, roles: Role[]) {
   return { ok: true as const, user }
 }
 
-export function userById(id: string | null | undefined) {
-  return id ? db.prepare('SELECT id, name, role, initials FROM users WHERE id = ?').get(id) as SessionUser | undefined : undefined
+export async function userById(id: string | null | undefined) {
+  if (!id) return undefined
+  const { rows } = await query<SessionUser>('SELECT id, name, role, initials FROM users WHERE id = $1', [id])
+  return rows[0]
 }
