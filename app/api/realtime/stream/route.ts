@@ -1,10 +1,8 @@
-import { cookies } from 'next/headers'
 import { deliveryBus, type DeliveryChangedEvent } from '@/lib/realtime/bus'
-import db from '@/lib/db'
+import { getSessionUser } from '@/lib/authz'
 
 export async function GET() {
-  const userId = (await cookies()).get('session-user')?.value
-  const user = userId ? db.prepare('SELECT role, name FROM users WHERE id = ?').get(userId) as { role: string; name: string } | undefined : undefined
+  const user = await getSessionUser()
   if (!user) return new Response('Unauthorized', { status: 401 })
   const encoder = new TextEncoder()
   let heartbeat: ReturnType<typeof setInterval>
@@ -13,7 +11,7 @@ export async function GET() {
     start(controller) {
       const send = (payload: unknown) => controller.enqueue(encoder.encode(`data: ${JSON.stringify(payload)}\n\n`))
       handler = (event) => {
-        const relevant = user.role === 'dispatcher' || (user.role === 'rider' && event.riderId === userId) || (user.role === 'retailer' && event.retailer === user.name)
+        const relevant = user.role === 'dispatcher' || (user.role === 'rider' && event.riderId === user.id) || (user.role === 'retailer' && event.retailerId === user.id)
         if (relevant) send(event)
       }
       deliveryBus.on('delivery-changed', handler)
