@@ -15,11 +15,11 @@ export async function PATCH(request: Request) {
   const role = await getDevRole(); const body = await request.json(); const delivery = db.prepare('SELECT * FROM deliveries WHERE id = ?').get(body.id) as any
   if (!delivery) return NextResponse.json({ error: 'Delivery not found.' }, { status: 404 })
   const actor = userForRole(role)
-  if (body.action === 'assign') { if (role !== 'dispatcher') return NextResponse.json({ error: 'Dispatcher access required.' }, { status: 403 }); db.prepare('UPDATE deliveries SET rider_id = ?, status = ? WHERE id = ? AND status = ?').run(body.riderId, 'Assigned', delivery.id, 'Pending'); return NextResponse.json({ ok: true }) }
+  if (body.action === 'assign') { if (role !== 'dispatcher') return NextResponse.json({ error: 'Dispatcher access required.' }, { status: 403 }); const update = db.prepare('UPDATE deliveries SET rider_id = ?, status = ? WHERE id = ? AND status = ?').run(body.riderId, 'Assigned', delivery.id, 'Pending'); if (update.changes === 0) return NextResponse.json({ error: 'This delivery was already assigned by someone else. Refresh and try again.' }, { status: 409 }); return NextResponse.json({ ok: true }) }
   if (role === 'rider' && delivery.rider_id !== actor) return NextResponse.json({ error: 'This delivery is not assigned to you.' }, { status: 403 })
   if (role === 'retailer') return NextResponse.json({ error: 'Retailer staff cannot advance delivery status.' }, { status: 403 })
   const requested = nextStatus(delivery.status); const result = validateTransition(delivery.status, requested)
   if (!result.ok) return NextResponse.json({ error: result.reason }, { status: 409 })
-  db.transaction(() => { db.prepare('UPDATE deliveries SET status = ? WHERE id = ? AND status = ?').run(result.status, delivery.id, delivery.status); db.prepare('INSERT INTO status_history (delivery_id, from_status, to_status, actor_id, created_at) VALUES (?, ?, ?, ?, ?)').run(delivery.id, delivery.status, result.status, actor, new Date().toISOString()) })()
+  try { db.transaction(() => { const update = db.prepare('UPDATE deliveries SET status = ? WHERE id = ? AND status = ?').run(result.status, delivery.id, delivery.status); if (update.changes === 0) throw new Error('STATUS_RACE'); db.prepare('INSERT INTO status_history (delivery_id, from_status, to_status, actor_id, created_at) VALUES (?, ?, ?, ?, ?)').run(delivery.id, delivery.status, result.status, actor, new Date().toISOString()) })() } catch (error) { if (error instanceof Error && error.message === 'STATUS_RACE') return NextResponse.json({ error: "This delivery's status changed before your update was saved. Refresh and try again." }, { status: 409 }); throw error }
   return NextResponse.json({ ok: true, status: result.status })
 }
