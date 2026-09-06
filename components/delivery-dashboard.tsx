@@ -15,7 +15,7 @@ function StatusBadge({ status }: { status: DeliveryStatus }) { return <Badge var
 
 export function DeliveryDashboard({ initialRole = 'dispatcher', initialDeliveries = initial }: { initialRole?: Role; initialDeliveries?: Delivery[] }) {
   const role = initialRole; const [deliveries, setDeliveries] = useState(initialDeliveries); const [selected, setSelected] = useState<Delivery>(initialDeliveries[0] ?? { id: '', reference: '', retailer: '', address: '', status: 'Pending', eta: '' }); const [address, setAddress] = useState('')
-  const visible = useMemo(() => role === 'retailer' ? deliveries.filter((delivery) => delivery.retailer === 'Northstar Market') : role === 'rider' ? deliveries.filter((delivery) => delivery.rider_name === 'Alex Rivera') : deliveries, [deliveries, role])
+  const visible = useMemo(() => deliveries, [deliveries])
   const advance = () => { const index = DELIVERY_STATUSES.indexOf(selected.status); if (index < 3) { const updated = { ...selected, status: DELIVERY_STATUSES[index + 1] }; setDeliveries((items) => items.map((item) => item.id === selected.id ? updated : item)); setSelected(updated) } }
   const create = () => { if (!address.trim()) return; const delivery: Delivery = { id: String(Date.now()), reference: `DLV-${1050 + deliveries.length}`, retailer: 'Northstar Market', address: address.trim(), status: 'Pending', eta: 'Today' }; setDeliveries((items) => [delivery, ...items]); setSelected(delivery); setAddress('') }
   const counts = DELIVERY_STATUSES.map((status) => deliveries.filter((delivery) => delivery.status === status).length)
