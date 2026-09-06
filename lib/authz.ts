@@ -1,15 +1,14 @@
 import { cookies } from 'next/headers'
 import { query } from './db'
+import { getSessionUser as getDatabaseSessionUser } from './session'
 import { isRole, type Role } from './status'
 
 export type SessionUser = { id: string; name: string; role: Role; initials: string }
 
 export async function getSessionUser(): Promise<SessionUser | null> {
-  const id = (await cookies()).get('session-user')?.value
-  if (!id) return null
-  const { rows } = await query<{ id: string; name: string; role: string; initials: string }>('SELECT id, name, role, initials FROM users WHERE id = $1', [id])
-  const user = rows[0]
-  return user && isRole(user.role) ? { ...user, role: user.role } : null
+  const token = (await cookies()).get('reflex-session')?.value
+  const user = await getDatabaseSessionUser(token)
+  return user && isRole(user.role) ? user : null
 }
 
 export function canAccessDelivery(user: SessionUser, delivery: { retailer_id?: string | null; rider_id?: string | null }) {

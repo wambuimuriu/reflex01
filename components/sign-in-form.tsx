@@ -20,7 +20,8 @@ export function SignInForm() {
       const response = await fetch('/api/auth/sign-in', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email, password }) })
       const data = await response.json()
       if (!response.ok) throw new Error(data.error ?? 'Unable to sign in.')
-      window.location.assign('/dashboard')
+      const destination = data.user.role === 'retailer' ? '/retailer' : data.user.role === 'rider' ? '/rider' : '/dispatcher'
+      window.location.assign(destination)
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : 'Unable to sign in.')
       setPending(false)

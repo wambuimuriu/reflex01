@@ -2,7 +2,7 @@ import { randomBytes, scryptSync } from 'node:crypto'
 import { query, pool } from '../lib/db'
 
 const password = 'Demo1234!'
-const hash = () => { const salt = randomBytes(16).toString('hex'); return `${salt}:${scryptSync(password, salt, 64).toString('hex')}` }
+const hash = () => { const salt = randomBytes(16).toString('hex'); return `scrypt:${salt}:${scryptSync(password, salt, 64).toString('hex')}` }
 const users = [
   ['u-retailer-1', 'Wanjiku Mwangi', 'retailer', 'WM', '1retailer@reflex.dev'],
   ['u-retailer-2', 'Muranga Pharmacy Desk', 'retailer', 'MP', 'retailer2@reflex.dev'],
