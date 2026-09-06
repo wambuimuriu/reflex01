@@ -3,7 +3,7 @@ import { getSessionUser } from '@/lib/authz'
 
 export async function GET() {
   const user = await getSessionUser()
-  if (!user) return new Response('Unauthorized', { status: 401 })
+  if (!user) return new Response('Not found', { status: 404 })
   const encoder = new TextEncoder()
   let heartbeat: ReturnType<typeof setInterval>
   let handler: (event: DeliveryChangedEvent) => void
