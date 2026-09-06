@@ -1,16 +1,16 @@
 import { NextResponse } from 'next/server'
 import { cookies } from 'next/headers'
-import db from '@/lib/db'
+import { deleteSession, getSessionUser, SESSION_COOKIE } from '@/lib/session'
 
 export async function GET() {
-  const id = (await cookies()).get('session-user')?.value
-  const user = id ? db.prepare('SELECT id, name, role, initials FROM users WHERE id = ?').get(id) : null
-  return NextResponse.json({ user: user ?? null })
+  const token = (await cookies()).get(SESSION_COOKIE)?.value
+  return NextResponse.json({ user: await getSessionUser(token) })
 }
 
 export async function DELETE() {
+  const token = (await cookies()).get(SESSION_COOKIE)?.value
+  await deleteSession(token)
   const response = NextResponse.json({ ok: true })
-  response.cookies.delete('session-user')
-  response.cookies.delete('dev-role')
+  response.cookies.delete(SESSION_COOKIE)
   return response
 }

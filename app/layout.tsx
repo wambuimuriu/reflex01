@@ -7,6 +7,6 @@ import '@fontsource/ibm-plex-sans/400.css'
 import '@fontsource/ibm-plex-sans/500.css'
 import './globals.css'
 
-export const metadata: Metadata = { title: 'Waypoint — Delivery operations', description: 'Coordinate every delivery from pickup to proof.', generator: 'v0.app' }
+export const metadata: Metadata = { title: 'Reflex — Delivery operations', description: 'Replace WhatsApp-based delivery coordination with one clear operational workspace.', generator: 'v0.app' }
 export const viewport: Viewport = { width: 'device-width', initialScale: 1, colorScheme: 'light', themeColor: '#f4f6f5' }
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) { return <html lang="en" className="bg-background"><body className="antialiased">{children}{process.env.NODE_ENV === 'production' && <Analytics />}</body></html> }
