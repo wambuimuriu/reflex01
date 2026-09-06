@@ -1,5 +1,6 @@
 import Link from 'next/link'
-import { ArrowRight, CheckCircle2, Clock3, MapPin, Route, ShieldCheck, Truck, Zap } from 'lucide-react'
+import { ArrowRight, CheckCircle2, Clock3, MapPin, Route, ShieldCheck, Truck } from 'lucide-react'
+import { SiteNavigation } from '@/components/site-navigation'
 
 const benefits = [
   { icon: Route, title: 'One operational view', text: 'Replace scattered WhatsApp threads with a shared delivery workspace.' },
@@ -10,10 +11,7 @@ const benefits = [
 export default function Page() {
   return (
     <main className="landing-page">
-      <header className="landing-nav">
-        <Link href="/" className="landing-brand" aria-label="Reflex home"><span className="brand-mark" aria-hidden="true"><Zap /></span><span>Reflex</span></Link>
-        <Link href="/sign-in" className="landing-nav-link">Sign in <ArrowRight aria-hidden="true" /></Link>
-      </header>
+      <SiteNavigation />
       <section className="landing-hero">
         <div className="landing-copy"><p className="eyebrow">Delivery operations, clarified</p><h1>Move deliveries forward without the <em>message chase.</em></h1><p className="landing-lede">Reflex replaces WhatsApp-based coordination with one calm, connected workspace for retailers, dispatchers, and riders.</p><div className="landing-actions"><Link href="/sign-in" className="landing-primary">Sign in to Reflex <ArrowRight aria-hidden="true" /></Link><span className="landing-note"><CheckCircle2 aria-hidden="true" /> Built for daily operations</span></div></div>
 
