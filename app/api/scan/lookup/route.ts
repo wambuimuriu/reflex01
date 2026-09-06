@@ -4,9 +4,9 @@ import { lookupDeliveryByConfirmationCode } from '@/lib/confirmation'
 
 export async function POST(request: Request) {
   const auth = requireRole(await getSessionUser(), ['rider'])
-  if (!auth.ok) return NextResponse.json({ error: auth.error }, { status: auth.status })
+  if (!auth.ok) return NextResponse.json({ error: 'Not found.' }, { status: 404 })
   const { code } = await request.json().catch(() => ({})) as { code?: string }
-  if (!code) return NextResponse.json({ error: 'Confirmation code is required.' }, { status: 400 })
+  if (!code?.trim()) return NextResponse.json({ error: 'Confirmation code is required.' }, { status: 400 })
   const delivery = await lookupDeliveryByConfirmationCode(code, auth.user.id)
-  return delivery ? NextResponse.json({ delivery }) : NextResponse.json({ error: 'Confirmation code not found.' }, { status: 404 })
+  return delivery ? NextResponse.json({ delivery }) : NextResponse.json({ error: 'Not found.' }, { status: 404 })
 }
