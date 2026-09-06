@@ -7,6 +7,6 @@ export async function POST(request: Request) {
   if (!auth.ok) return NextResponse.json({ error: auth.error }, { status: auth.status })
   const { code } = await request.json().catch(() => ({})) as { code?: string }
   if (!code) return NextResponse.json({ error: 'Confirmation code is required.' }, { status: 400 })
-  if (!confirmScannedOrder(code, auth.user.id)) return NextResponse.json({ error: 'This order was not found or has already been confirmed.' }, { status: 409 })
+  if (!await confirmScannedOrder(code, auth.user.id)) return NextResponse.json({ error: 'This order was not found or has already been confirmed.' }, { status: 409 })
   return NextResponse.json({ confirmed: true })
 }
