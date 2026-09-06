@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { ArrowRight, CheckCircle2, Clock3, Route, ShieldCheck, Zap } from 'lucide-react'
+import { ArrowRight, CheckCircle2, Clock3, MapPin, Route, ShieldCheck, Truck, Zap } from 'lucide-react'
 
 const benefits = [
   { icon: Route, title: 'One operational view', text: 'Replace scattered WhatsApp threads with a shared delivery workspace.' },
@@ -17,6 +17,7 @@ export default function Page() {
       <section className="landing-hero">
         <div className="landing-copy"><p className="eyebrow">Delivery operations, clarified</p><h1>Move deliveries forward without the <em>message chase.</em></h1><p className="landing-lede">Reflex replaces WhatsApp-based coordination with one calm, connected workspace for retailers, dispatchers, and riders.</p><div className="landing-actions"><Link href="/sign-in" className="landing-primary">Sign in to Reflex <ArrowRight aria-hidden="true" /></Link><span className="landing-note"><CheckCircle2 aria-hidden="true" /> Built for daily operations</span></div></div>
 
+        <div className="landing-route-visual" aria-hidden="true"><div className="route-map-lines"><span /><span /><span /><span /></div><div className="route-origin"><span className="route-origin-dot" /></div><div className="route-path"><span className="route-path-dash route-path-dash-one" /><span className="route-path-dash route-path-dash-two" /><span className="route-path-dash route-path-dash-three" /><span className="route-path-dash route-path-dash-four" /></div><div className="route-truck"><Truck /></div><div className="route-destination"><MapPin /><span /></div><p className="route-caption">Live delivery route</p></div>
       </section>
       <section className="landing-benefits" aria-label="Reflex benefits">{benefits.map(({ icon: Icon, title, text }) => <article key={title}><span className="benefit-icon"><Icon aria-hidden="true" /></span><div><h2>{title}</h2><p>{text}</p></div></article>)}</section>
       <footer className="landing-footer"><span>Reflex</span><span>Delivery coordination for teams that move.</span></footer>
