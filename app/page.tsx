@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { ArrowRight, CheckCircle2, Clock3, MapPin, Route, ShieldCheck, Truck, Users } from 'lucide-react'
 import { SiteNavigation } from '@/components/site-navigation'
 import { SiteFooter } from '@/components/site-footer'
+import { ParticleSwarm } from '@/components/particle-swarm'
 
 const benefits = [
   { icon: Route, title: 'One operational view', text: 'Replace scattered WhatsApp threads with a shared delivery workspace.' },
@@ -20,7 +21,7 @@ export default function Page() {
     <SiteNavigation />
     <section className="landing-hero">
       <div className="landing-copy"><p className="eyebrow">Delivery operations, clarified</p><h1>Move deliveries forward without the <em>message chase.</em></h1><p className="landing-lede">Reflex replaces WhatsApp-based coordination with one calm, connected workspace for retailers, dispatchers, and riders.</p><div className="landing-actions"><Link href="/sign-in" className="landing-primary">Sign in to Reflex <ArrowRight aria-hidden="true" /></Link><Link href="/about" className="landing-secondary">See how it works</Link></div><span className="landing-note"><CheckCircle2 aria-hidden="true" /> Built for daily operations</span></div>
-      <div className="landing-route-column"><div className="landing-route-visual" aria-hidden="true"><div className="route-map-lines"><span /><span /><span /><span /></div><div className="route-origin"><span className="route-origin-dot" /></div><div className="route-path"><span className="route-path-dash route-path-dash-one" /><span className="route-path-dash route-path-dash-two" /><span className="route-path-dash route-path-dash-three" /><span className="route-path-dash route-path-dash-four" /></div><div className="route-truck"><Truck /></div><div className="route-destination"><MapPin /><span /></div><p className="route-caption">Live delivery route</p></div></div>
+      <div className="landing-route-column"><div className="landing-route-visual" aria-hidden="true"><ParticleSwarm /><div className="route-map-lines"><span /><span /><span /><span /></div><div className="route-origin"><span className="route-origin-dot" /></div><div className="route-path"><span className="route-path-dash route-path-dash-one" /><span className="route-path-dash route-path-dash-two" /><span className="route-path-dash route-path-dash-three" /><span className="route-path-dash route-path-dash-four" /></div><div className="route-truck"><Truck /></div><div className="route-destination"><MapPin /><span /></div><p className="route-caption">Live delivery route</p></div></div>
     </section>
     <section className="landing-benefits" aria-label="Reflex benefits">{benefits.map(({ icon: Icon, title, text }) => <article key={title}><span className="benefit-icon"><Icon aria-hidden="true" /></span><div><h2>{title}</h2><p>{text}</p></div></article>)}</section>
     <section className="landing-workflow"><div className="section-heading"><p className="eyebrow">A calmer operating rhythm</p><h2>Every handoff has a next step.</h2></div><div className="workflow-grid">{workflow.map((step) => <article key={step.number}><span className="workflow-number">{step.number}</span><h3>{step.title}</h3><p>{step.text}</p></article>)}</div></section>
