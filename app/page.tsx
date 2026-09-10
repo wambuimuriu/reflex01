@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { ArrowRight, CheckCircle2, Clock3, MapPin, Route, ShieldCheck, Truck, Users } from 'lucide-react'
 import { SiteNavigation } from '@/components/site-navigation'
+import { SiteFooter } from '@/components/site-footer'
 
 const benefits = [
   { icon: Route, title: 'One operational view', text: 'Replace scattered WhatsApp threads with a shared delivery workspace.' },
@@ -23,6 +24,6 @@ export default function Page() {
     <section className="landing-benefits" aria-label="Reflex benefits">{benefits.map(({ icon: Icon, title, text }) => <article key={title}><span className="benefit-icon"><Icon aria-hidden="true" /></span><div><h2>{title}</h2><p>{text}</p></div></article>)}</section>
     <section className="landing-workflow"><div className="section-heading"><p className="eyebrow">A calmer operating rhythm</p><h2>Every handoff has a next step.</h2></div><div className="workflow-grid">{workflow.map((step) => <article key={step.number}><span className="workflow-number">{step.number}</span><h3>{step.title}</h3><p>{step.text}</p></article>)}</div></section>
     <section className="landing-trust"><div><p className="eyebrow">For teams that move</p><h2>One shared truth from request to proof.</h2></div><div className="trust-copy"><Users aria-hidden="true" /><p>Give every role the context they need, without giving anyone another thread to monitor.</p><Link href="/dashboard">Open the workspace <ArrowRight aria-hidden="true" /></Link></div></section>
-    <footer className="landing-footer"><span>Reflex</span><span>Delivery coordination for teams that move.</span></footer>
+    <SiteFooter />
   </main>
 }

@@ -11,7 +11,7 @@ const links = [
   { href: '/dashboard', label: 'Dashboard' },
 ]
 
-export function SiteNavigation({ showSignIn = true }: { showSignIn?: boolean }) {
+export function SiteNavigation({ showSignIn = true, authenticated = false }: { showSignIn?: boolean; authenticated?: boolean }) {
   const pathname = usePathname()
   const [open, setOpen] = useState(false)
 
@@ -24,11 +24,12 @@ export function SiteNavigation({ showSignIn = true }: { showSignIn?: boolean }) 
       <div className="site-navigation-links">
         {links.map((link) => <Link key={link.href} href={link.href} className={pathname === link.href ? 'active' : ''}>{link.label}</Link>)}
       </div>
-      {showSignIn && <Link href="/sign-in" className="site-navigation-cta">Sign in</Link>}
+      {showSignIn && !authenticated && <Link href="/sign-in" className="site-navigation-cta">Sign in</Link>}
+      {authenticated && <Link href="/api/auth/sign-out" className="site-navigation-cta">Sign out</Link>}
       <button type="button" className="site-navigation-toggle" aria-expanded={open} aria-controls="mobile-navigation" aria-label={open ? 'Close navigation menu' : 'Open navigation menu'} onClick={() => setOpen((value) => !value)}>
         {open ? <X /> : <Menu />}
       </button>
-      {open && <div id="mobile-navigation" className="site-navigation-mobile">{links.map((link) => <Link key={link.href} href={link.href} className={pathname === link.href ? 'active' : ''} onClick={() => setOpen(false)}>{link.label}</Link>)}{showSignIn && <Link href="/sign-in" className="site-navigation-mobile-cta" onClick={() => setOpen(false)}>Sign in</Link>}</div>}
+      {open && <div id="mobile-navigation" className="site-navigation-mobile">{links.map((link) => <Link key={link.href} href={link.href} className={pathname === link.href ? 'active' : ''} onClick={() => setOpen(false)}>{link.label}</Link>)}{showSignIn && !authenticated && <Link href="/sign-in" className="site-navigation-mobile-cta" onClick={() => setOpen(false)}>Sign in</Link>}{authenticated && <Link href="/api/auth/sign-out" className="site-navigation-mobile-cta" onClick={() => setOpen(false)}>Sign out</Link>}</div>}
     </nav>
   )
 }
