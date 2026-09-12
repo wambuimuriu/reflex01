@@ -1,3 +1,6 @@
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
+
 import { redirect } from 'next/navigation'
 import { cookies } from 'next/headers'
 import { getSessionUser, SESSION_COOKIE } from '@/lib/session'
