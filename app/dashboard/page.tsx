@@ -7,7 +7,7 @@ import { getSessionUser } from '@/lib/authz'
 export const dynamic = 'force-dynamic'
 export const revalidate = 0
 
-export const metadata = { title: 'Dashboard — Reflex', description: 'Your Reflex delivery operations dashboard.' }
+export const metadata = { title: 'Dashboard | Reflex', description: 'Your Reflex delivery operations dashboard.' }
 
 export default async function DashboardPage() {
   const user = await getSessionUser()
